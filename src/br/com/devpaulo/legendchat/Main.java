@@ -215,7 +215,9 @@ public class Main extends JavaPlugin implements PluginMessageListener {
 				String[] pair = separated_pairs.split("=");
 				tags.put(pair[0].replace(" ", ""), (pair.length==1?"":pair[1]));
 			}
-			this.getServer().getLogger().info("[Legendchat] Incoming message from server "+tags.get("server"));
+			if(Legendchat.logToBukkit()) {
+			    this.getServer().getLogger().info("[Legendchat] Incoming message from server "+tags.get("server"));
+			}
 			BungeecordChannel c = Legendchat.getBungeecordChannel();
 			if(c!=null)
 				c.sendBungeecordMessage(tags, msg);
