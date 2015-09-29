@@ -109,23 +109,24 @@ public class ChannelUtils {
 		recipients2.addAll(recipients);
 
 		for(Player p : recipients2) {
-			if(c.getMaxDistance()!=0) {
-				if(sender.getWorld()!=p.getWorld()) {
-					recipients.remove(p);
-					continue;
-				}
-				else if(sender.getLocation().distance(p.getLocation())>c.getMaxDistance()) {
-					recipients.remove(p);
-					continue;
-				}
-			}
-			else {
-				if(!c.isCrossworlds())
-					if(sender.getWorld()!=p.getWorld()) {
-						recipients.remove(p);
-						continue;
-					}
-			}
+		    if(!(c instanceof BungeecordChannel)) {
+		        if(c.getMaxDistance() > 0.0D) {
+		            if(!sender.getWorld().equals(p.getWorld())) {
+		                recipients.remove(p);
+		                continue;
+		            } else if(sender.getLocation().distance(p.getLocation()) > c.getMaxDistance()) {
+		                recipients.remove(p);
+		                continue;
+		            }
+		        } else {
+		            if(!c.isCrossworlds()) {
+		                if(!sender.getWorld().equals(p.getWorld())) {
+		                    recipients.remove(p);
+		                    continue;
+		                }
+		            }
+		        }
+		    }
 			if(Legendchat.getIgnoreManager().hasPlayerIgnoredPlayer(p, sender.getName())) {
 				recipients.remove(p);
 				continue;
@@ -244,7 +245,7 @@ public class ChannelUtils {
 		if(c.getDelayPerMessage()>0&&!sender.hasPermission("legendchat.channel."+c.getName().toLowerCase()+".nodelay")&&!sender.hasPermission("legendchat.admin"))
 			Legendchat.getDelayManager().addPlayerDelay(sender.getName(), c);
 		
-		if(c.getMaxDistance()!=0)
+		if(c.getMaxDistance() > 0.0D)
 			if(Legendchat.showNoOneHearsYou()) {
 				boolean show = false;
 				if(e.getRecipients().size()==0)
